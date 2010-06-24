@@ -265,7 +265,7 @@ Accepts an optional B<https> parameter for securing network traffic.
 Accepts an optional B<ua> parameter for passing in a custom LWP::UserAgent
 object.
 
-Accepts an optional 'id' parameter from a previous call to L</upload>.
+Accepts an optional B<id> parameter from a previous call to L</upload>.
 
 =head2 upload
 
