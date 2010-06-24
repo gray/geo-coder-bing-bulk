@@ -50,7 +50,7 @@ while ($bulk->is_pending) {
 }
 
 my $data = $bulk->download;
-ok($data and @$data, 'got results');
+ok($data && @$data, 'got results');
 is($data->[0]{Address}{PostalCode}, 90272, 'Address 1: correct ZIP');
 like($data->[1]{Address}{PostalCode}, qr/^90046/, 'Address 2: correct ZIP');
 like($data->[2]{Address}{PostalCode}, qr/^90027/, 'Address 3: correct ZIP');

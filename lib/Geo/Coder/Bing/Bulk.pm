@@ -10,7 +10,7 @@ use JSON;
 use LWP::UserAgent;
 use URI;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 $VERSION = eval $VERSION;
 
 sub new {
@@ -267,25 +267,25 @@ object.
 
 Accepts an optional 'id' parameter from a previous call to L</upload>.
 
-=head2 add
-
-    $remainder = $bulk->add(\@locations)
-
-Adds the given locations strings to the bulk query. Queries are limited
-to 100MB on the server side, so this method will return a reference to an
-array of any locations that are over that limit.
-
 =head2 upload
 
-Submits a single bulk query for all the given locations strings. Note that
-queries are limited to 100MB on the server side and there is a limit of 10
-concurrent bulk jobs.
+    $id = $bulk->upload(\@locations)
+
+Submits a single bulk query for all the given locations strings and returns
+the assigned job id.
+
+Note that queries are limited to 100MB and there is a limit of 10 concurrent
+bulk jobs.
 
 =head2 is_pending
+
+    $bool = $bulk->is_pending
 
 Polls for the job status and returns true if it has not yet completed.
 
 =head2 download
+
+    $array_ref = $bulk->download
 
 Downloads the results of the query and returns an array reference if there
 were results. A typical result looks like:
@@ -313,6 +313,8 @@ were results. A typical result looks like:
 
 =head2 failed
 
+    $array_ref = $bulk->failed
+
 Returns an array reference if there were query failures.
 
 Note that Bing will report invalid addresses as successfully geocoded even
@@ -323,15 +325,15 @@ are permitted.
 
 =head2 response
 
-    $response = $geocoder->response()
+    $response = $bulk->response()
 
 Returns an L<HTTP::Response> object for the last submitted request. Can be
 used to determine the details of an error.
 
 =head2 ua
 
-    $ua = $geocoder->ua()
-    $ua = $geocoder->ua($ua)
+    $ua = $bulk->ua()
+    $ua = $bulk->ua($ua)
 
 Accessor for the UserAgent object.
 
