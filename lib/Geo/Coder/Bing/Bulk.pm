@@ -271,7 +271,7 @@ Accepts an optional B<id> parameter from a previous call to L</upload>.
 
     $id = $bulk->upload(\@locations)
 
-Submits a single bulk query for all the given locations strings and returns
+Submits a single bulk query for all the given location strings and returns
 the assigned job id.
 
 Note that queries are limited to 100MB and there is a limit of 10 concurrent
@@ -318,7 +318,7 @@ were results. A typical result looks like:
 Returns an array reference if there were query failures.
 
 Note that Bing will report invalid addresses as successfully geocoded even
-thought it could not determine its location. Failures appear to only concern
+though it could not determine its location. Failures appear to only concern
 query construction- ex. missing fields, etc. So this is likely not going to
 affect users of this module- until advanced locations (hashrefs of fields)
 are permitted.
