@@ -378,7 +378,7 @@ L<http://rt.cpan.org/Public/Dist/Display.html?Name=Geo-Coder-Bing-Bulk>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/Geo-Coder-Bing-Bulk>
+L<http://search.cpan.org/dist/Geo-Coder-Bing-Bulk/>
 
 =back
 
