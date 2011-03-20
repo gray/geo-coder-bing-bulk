@@ -78,7 +78,7 @@ sub upload {
     );
 
     for my $loc (@$locs) {
-        (my $str = $loc) =~ s/[|\n]/ /g;
+        (my $str = $loc) =~ tr/|\n/ /s;
         $req->add_content_utf8("||$str\n");
     }
     # Prevents LWP warning about wrong content length.
@@ -113,7 +113,7 @@ sub _status {
     return unless $self->{content} or $self->{id};
 
     my $uri = URI->new(
-        'http://spatial.virtualearth.net/REST/v1/dataflows/Geocode/' .
+        'http://spatial.virtualearth.net/REST/v1/Dataflows/Geocode/' .
         $self->{id}
     );
     $uri->scheme('https') if $self->{https};
@@ -153,7 +153,7 @@ sub _download {
     return unless $self->{$type};
 
     my $uri = URI->new(
-        'http://spatial.virtualearth.net/REST/v1/dataflows/Geocode/' .
+        'http://spatial.virtualearth.net/REST/v1/Dataflows/Geocode/' .
         $self->{id} . '/output/' . $type
     );
     $uri->scheme('https') if $self->{https};
@@ -273,8 +273,9 @@ Accepts an optional B<id> parameter from a previous call to L</upload>.
 Submits a single bulk query for all the given location strings and returns
 the assigned job id.
 
-Note that queries are limited to 100MB and there is a limit of 10 concurrent
-bulk jobs.
+Note that query size is limited to 300 MB (uncompressed) and 200,000
+locations; there is a limit of 10 concurrent bulk jobs and 50 jobs per 24
+hours.
 
 =head2 is_pending
 
