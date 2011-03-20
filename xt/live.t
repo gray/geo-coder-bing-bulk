@@ -4,17 +4,12 @@ use Encode;
 use Geo::Coder::Bing::Bulk;
 use Test::More;
 
-unless ($ENV{BING_MAPS_KEY}) {
-    plan skip_all => 'BING_MAPS_KEY environment variable must be set';
-}
-else {
-    plan tests => 11;
-}
+plan skip_all => 'BING_MAPS_KEY environment variable must be set'
+    unless $ENV{BING_MAPS_KEY};
 
 my $debug = $ENV{GEO_CODER_BING_DEBUG};
-unless ($debug) {
-    diag "Set GEO_CODER_BING_DEBUG to see request/response data";
-}
+diag "Set GEO_CODER_BING_DEBUG to see request/response data"
+    unless $debug;
 
 my @addresses = (
     'Sunset Blvd and Los Liones Dr, Pacific Palisades, CA',
@@ -51,14 +46,21 @@ while ($bulk->is_pending) {
 
 my $data = $bulk->download;
 ok($data && @$data, 'got results');
-is($data->[0]{Address}{PostalCode}, 90272, 'Address 1: correct ZIP');
-like($data->[1]{Address}{PostalCode}, qr/^90046/, 'Address 2: correct ZIP');
-like($data->[2]{Address}{PostalCode}, qr/^90027/, 'Address 3: correct ZIP');
-is($data->[3]{Address}{PostalCode}, 90028, 'Address 4: correct ZIP');
-is($data->[4]{Address}{CountryRegion}, 'Germany', 'Address 5: latin1 bytes');
-is($data->[5]{Address}{CountryRegion}, 'Germany', 'Address 6: utf-8 chars');
-is($data->[6]{Address}{CountryRegion}, 'Germany', 'Address 7: utf-8 bytes');
-is($data->[7]{Address}, undef, 'Address 8: invalid');
+
+# The results are not always in the same order as requested, so make use of
+# the location id.
+my %data = map { $_->{Id} => $_ } @$data;
+
+like($data{0}->{Address}{PostalCode}, qr/^90272\b/, 'Address 1: correct ZIP');
+like($data{1}->{Address}{PostalCode}, qr/^90046\b/, 'Address 2: correct ZIP');
+like($data{2}->{Address}{PostalCode}, qr/^90027\b/, 'Address 3: correct ZIP');
+is($data{3}->{Address}{Locality}, 'Los Angeles', 'Address 4: correct locality');
+is($data{4}->{Address}{CountryRegion}, 'Germany', 'Address 5: latin1 bytes');
+is($data{5}->{Address}{CountryRegion}, 'Germany', 'Address 6: utf-8 chars');
+is($data{6}->{Address}{CountryRegion}, 'Germany', 'Address 7: utf-8 bytes');
+is($data{7}->{Address}, undef, 'Address 8: invalid');
 
 my $failed = $bulk->failed;
 is($failed, undef, 'no failures');
+
+done_testing;

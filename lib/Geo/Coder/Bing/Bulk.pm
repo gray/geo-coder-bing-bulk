@@ -77,9 +77,11 @@ sub upload {
         $uri, content_type => 'text/plain',
     );
 
+    my $id = 0;
     for my $loc (@$locs) {
         (my $str = $loc) =~ tr/|\n\r/ /s;
-        $req->add_content_utf8("||$str\n");
+        $req->add_content_utf8("$id||$str\n");
+        $id++;
     }
     # Prevents LWP warning about wrong content length.
     $req->content_length(length(${$req->content_ref}));
@@ -174,6 +176,7 @@ sub _download {
 # to the data schema described here [1].
 # [1] http://msdn.microsoft.com/en-us/library/ff701736.aspx
 my %field_mapping = (
+    0  => 'Id',
     2  => 'Query',
     12 => [ Address => 'AddressLine' ],
     13 => [ Address => 'AdminDistrict' ],
@@ -304,6 +307,7 @@ were results. A typical result looks like:
         DisplayName =>
             "W Sunset Blvd & Los Liones Dr, Pacific Palisades, CA 90272",
         EntityType => "RoadIntersection",
+        Id         => 0,
         InterpolatedLocation =>
             { Latitude => "34.04185", Longitude => "-118.554" },
         Query      => "Sunset Blvd and Los Liones Dr, Pacific Palisades, CA",
