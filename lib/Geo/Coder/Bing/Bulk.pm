@@ -78,7 +78,7 @@ sub upload {
     );
 
     for my $loc (@$locs) {
-        (my $str = $loc) =~ tr/|\n/ /s;
+        (my $str = $loc) =~ tr/|\n\r/ /s;
         $req->add_content_utf8("||$str\n");
     }
     # Prevents LWP warning about wrong content length.
@@ -198,7 +198,7 @@ sub _parse_output {
     my ($self, $ref) = @_;
 
     my @data;
-    while ($$ref =~ /^(.*)$/gm) {
+    while ($$ref =~ /([^\n\r]+)/g) {
         my @fields = split '\|', $1, 31;
         my $data = {};
         for my $i (keys %field_mapping) {
