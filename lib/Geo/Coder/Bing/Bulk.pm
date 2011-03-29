@@ -34,9 +34,8 @@ sub new {
         $self->ua->default_header(accept_encoding => 'gzip,deflate');
     }
 
-    if ($self->{https} and not $self->ua->is_protocol_supported('https')) {
-        croak q('https' requires Crypt::SSLeay or IO::Socket::SSL)
-    }
+    croak q('https' requires LWP::Protocol::https)
+        if $self->{https} and not $self->ua->is_protocol_supported('https');
 
     $self->{status}  = '';
 
